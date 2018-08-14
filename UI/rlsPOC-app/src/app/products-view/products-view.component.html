@@ -1,0 +1,27 @@
+<p>
+  Products View
+</p>
+
+<div>
+  <input [(ngModel)]="apiKey" size="50">
+  <button (click)="getProducts()">Get Products</button>
+</div>
+<br><br>
+<div *ngFor="let product of productArray">
+  <table border="1">
+    <tr>
+      <td>Product ID</td>
+      <td>{{product.productId}}</td>
+    </tr>
+    <tr>
+      <td>Product Name</td>
+      <td>{{product.productName}}</td>
+    </tr>
+    <tr>
+      <td>Unit Price</td>
+      <td>{{product.unitPrice}}</td>
+    </tr>
+  </table>
+
+
+</div>

@@ -29,6 +29,19 @@ namespace RowLevelSecurityPOC
         {
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); // we need this to access HttpContext in DataContext
             services.AddDbContext<DataContext>(ServiceLifetime.Scoped);
+
+            services.AddCors(options =>
+            {
+                // BEGIN01
+                options.AddPolicy("AllowAllOrigins",
+                builder =>
+                {
+                    builder.AllowAnyOrigin().AllowAnyMethod()
+                    .WithHeaders("accept", "content-type", "origin", "x-api-key");
+                });
+                // END01
+            });
+
             services.AddMvc();
         }
 
@@ -41,6 +54,8 @@ namespace RowLevelSecurityPOC
             }
 
             app.UseTenantFinder();
+            app.UseCors("AllowAllOrigins");
+
 
             app.UseMvc();
         }

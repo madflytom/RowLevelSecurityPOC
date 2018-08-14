@@ -21,31 +21,34 @@ namespace RowLevelSecurityPOC.Models
 
         public async Task Invoke(HttpContext context)
         {
-            var apiKey = context.Request.Headers["X-API-Key"].FirstOrDefault();
-            if (string.IsNullOrEmpty(apiKey))
+            if (context.Request.Method != "OPTIONS")
             {
-                context.Response.StatusCode = 400;
-                await context.Response.WriteAsync("Invalid API key");
-                return;
-            }
-            Guid apiKeyGuid;
-            if (!Guid.TryParse(apiKey, out apiKeyGuid))
-            {
-                context.Response.StatusCode = 400;
-                await context.Response.WriteAsync("Invalid API key");
-                return;
-            }
-            var tenant = dataContext.Tenants.Where(t => t.APIKey == apiKeyGuid).FirstOrDefault();
-            if (tenant == null)
-            {
-                context.Response.StatusCode = 401;
-                await context.Response.WriteAsync("Invalid API key");
-                return;
-            }
-            else
-            {
-                // add tenant to http context for use when the conection to the data is opened
-                context.Items["TENANT"] = tenant;
+                var apiKey = context.Request.Headers["X-API-Key"].FirstOrDefault();
+                if (string.IsNullOrEmpty(apiKey))
+                {
+                    context.Response.StatusCode = 400;
+                    await context.Response.WriteAsync("Invalid API key");
+                    return;
+                }
+                Guid apiKeyGuid;
+                if (!Guid.TryParse(apiKey, out apiKeyGuid))
+                {
+                    context.Response.StatusCode = 400;
+                    await context.Response.WriteAsync("Invalid API key");
+                    return;
+                }
+                var tenant = dataContext.Tenants.Where(t => t.APIKey == apiKeyGuid).FirstOrDefault();
+                if (tenant == null)
+                {
+                    context.Response.StatusCode = 401;
+                    await context.Response.WriteAsync("Invalid API key");
+                    return;
+                }
+                else
+                {
+                    // add tenant to http context for use when the conection to the data is opened
+                    context.Items["TENANT"] = tenant;
+                }
             }
 
             await next.Invoke(context);
