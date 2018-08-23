@@ -56,6 +56,10 @@ namespace RowLevelSecurityPOC.Models
                 cmd.Parameters.AddWithValue("@TenantId", tenantId);
                 cmd.ExecuteNonQuery();
             }
+            else if (e.CurrentState == ConnectionState.Closed)
+	        {
+	            connection.StateChange -= Connection_StateChange;
+	        }
         }
     }
 }
