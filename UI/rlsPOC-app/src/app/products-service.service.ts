@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpRequest } from '@angular/common/http';
 
-const headers = new HttpHeaders()
-  .set("X-API-Key", "081FF61A-E688-4DC2-84E7-6CC8FFED4D69");
-
 @Injectable({
   providedIn: 'root'
 })
